@@ -161,12 +161,12 @@ export class ActivityTracker {
     }
 
     //! this method returns all the changes available in the codeHistory array
-    private getAllChanges(): codeChange[]{
+    public getAllChanges(): codeChange[]{
         return [...this.codeHistory];
     }
 
     //! this method returns the summary so that it can be analyzed by AI
-    private getFormattedSummary(): string{
+    public getFormattedSummary(): string{
         let summary = '';
 
         for(const change of this.codeHistory){
@@ -180,7 +180,7 @@ export class ActivityTracker {
     }
 
     //! this method clears the history of the codeHistory array
-    private clearHistory(){
+    public clearHistory(){
         this.codeHistory = [];
     }
 }
@@ -189,3 +189,5 @@ export function initializeActivityTracker(): ActivityTracker {
     const tracker = new ActivityTracker();
     return tracker;
 }
+
+export const tracker = initializeActivityTracker();
