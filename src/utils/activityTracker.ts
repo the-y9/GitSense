@@ -170,7 +170,7 @@ export class ActivityTracker {
 
         for(const change of this.codeHistory){
             summary += `\nFile Path: ${change.filepath}\n`;
-            summary += `Timestamp: ${new Date(change.timestamp).toISOString()}\n`;
+            summary += `Timestamp: ${new Date(change.timestamp).toLocaleString()}\n`;
             summary += `Code:\n${change.content}\n`;
             summary += '----------------------------------------\n';
         }
