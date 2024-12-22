@@ -150,7 +150,6 @@ export class ActivityTracker {
             content: text,
             timestamp: Date.now()
         };
-        console.log("New change is:", change);
         
         this.codeHistory.push(change);
         console.log("code history is", this.codeHistory);

@@ -16,6 +16,10 @@
       {
         "command": "gitime.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "gitime.summary",
+        "title": "Generate Summary"
       }
     ]
   },
