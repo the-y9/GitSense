@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 const { Octokit} = require('@octokit/rest');
+import simpleGit from 'simple-git';
 export class GithubService{
 
     public Info: {
@@ -37,12 +38,31 @@ export class GithubService{
                 return vscode.window.showErrorMessage('Error setting Github, Kindly check you PAT');
             }
             console.log("Username is:", this.Info.username);
+            this.createRepo();
         } catch (error) {
             console.log("Error setting username", error);
             return vscode.window.showErrorMessage('Error setting Github, Kindly check you PAT');
         }
-        console.log("Token is:", token);
-        return token;
+    }
+
+    public async createRepo(){
+        if (!this.Info.octokit || !this.Info.username){
+            return vscode.window.showErrorMessage('Error setting Github, Kindly check you PAT');
+        }
+        try {
+            await this.Info.octokit.repos.get({
+                owner: this.Info.username,
+                repo: 'gitime'
+            });
+            console.log('Repository already exists');
+        } catch (error) {
+            await this.Info.octokit.repos.createForAuthenticatedUser({
+                name: 'gitime',
+                private: false,
+                description: 'Repository for tracking code activity via Gitime extension'
+            });
+            console.log('Created new repository: gitime');
+        }
     }
 }
 
