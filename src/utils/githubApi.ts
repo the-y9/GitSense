@@ -1,7 +1,21 @@
 import * as vscode from 'vscode';
-// import { Octokit } from '@octokit/rest';
-
+const { Octokit} = require('@octokit/rest');
 export class GithubService{
+
+    public Info: {
+        token: string | undefined;
+        username: string | undefined;
+        octokit: any;
+    };
+
+    constructor() {
+        this.Info = {
+            token: undefined,
+            username: undefined,
+            octokit: undefined,
+        };
+    }
+
     public async getToken(){
         const token = await vscode.window.showInputBox({
             prompt: "Enter your github personal access token (PAT) with access to repo",
@@ -11,6 +25,21 @@ export class GithubService{
         });
         if(!token){
             return vscode.window.showWarningMessage('PAR is required for autocommit');
+        }
+
+        this.Info.token = token;
+        this.Info.octokit = new Octokit({ auth: token });
+
+        try {
+            const { data } = await this.Info.octokit.users.getAuthenticated();
+            this.Info.username = data.login;
+            if(!this.Info.username){
+                return vscode.window.showErrorMessage('Error setting Github, Kindly check you PAT');
+            }
+            console.log("Username is:", this.Info.username);
+        } catch (error) {
+            console.log("Error setting username", error);
+            return vscode.window.showErrorMessage('Error setting Github, Kindly check you PAT');
         }
         console.log("Token is:", token);
         return token;
