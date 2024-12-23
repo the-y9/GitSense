@@ -1,6 +1,28 @@
-// import * as vscode from 'vscode';
+import * as vscode from 'vscode';
 // import { Octokit } from '@octokit/rest';
 
+export class GithubService{
+    public async getToken(){
+        const token = await vscode.window.showInputBox({
+            prompt: "Enter your github personal access token (PAT) with access to repo",
+            placeHolder: 'ghp_xxx...',
+            ignoreFocusOut: true,
+            password: true,
+        });
+        if(!token){
+            return vscode.window.showWarningMessage('PAR is required for autocommit');
+        }
+        console.log("Token is:", token);
+        return token;
+    }
+}
+
+export function initializeGithubService(){
+    const githubService = new GithubService();
+    return githubService;
+}
+
+export const githubService = initializeGithubService();
 // export class GitHubService {
 //     private octokit: Octokit;
 //     private readonly repoName = 'gitime';
