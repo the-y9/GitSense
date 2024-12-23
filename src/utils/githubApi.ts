@@ -1,74 +1,130 @@
-import * as vscode from 'vscode';
-const { Octokit} = require('@octokit/rest');
-import simpleGit from 'simple-git';
-export class GithubService{
+import * as vscode from "vscode";
+const { Octokit } = require("@octokit/rest");
+import simpleGit, { SimpleGit } from "simple-git";
+export class GithubService {
+  public Info: {
+    token: string | undefined;
+    username: string | undefined;
+    octokit: any;
+    git: any;
+    workspacePath: string | undefined | null;
+  };
 
-    public Info: {
-        token: string | undefined;
-        username: string | undefined;
-        octokit: any;
+  constructor() {
+    this.Info = {
+      token: undefined,
+      username: undefined,
+      octokit: undefined,
+      git: undefined,
+      workspacePath: undefined,
     };
+  }
 
-    constructor() {
-        this.Info = {
-            token: undefined,
-            username: undefined,
-            octokit: undefined,
-        };
+  public async getToken() {
+    const workspacePath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+    if (!workspacePath) {
+      vscode.window.showErrorMessage("No workspace folder found");
+      return false;
+    }
+    this.Info.workspacePath = workspacePath;
+
+    const token = await vscode.window.showInputBox({
+      prompt:
+        "Enter your github personal access token (PAT) with access to repo",
+      placeHolder: "ghp_xxx...",
+      ignoreFocusOut: true,
+      password: true,
+    });
+    if (!token) {
+      return vscode.window.showWarningMessage("PAR is required for autocommit");
     }
 
-    public async getToken(){
-        const token = await vscode.window.showInputBox({
-            prompt: "Enter your github personal access token (PAT) with access to repo",
-            placeHolder: 'ghp_xxx...',
-            ignoreFocusOut: true,
-            password: true,
-        });
-        if(!token){
-            return vscode.window.showWarningMessage('PAR is required for autocommit');
-        }
+    this.Info.token = token;
+    this.Info.octokit = new Octokit({ auth: token });
 
-        this.Info.token = token;
-        this.Info.octokit = new Octokit({ auth: token });
+    try {
+      const { data } = await this.Info.octokit.users.getAuthenticated();
+      this.Info.username = data.login;
+      if (!this.Info.username) {
+        return vscode.window.showErrorMessage(
+          "Error setting Github, Kindly check you PAT"
+        );
+      }
+      console.log("Username is:", this.Info.username);
 
-        try {
-            const { data } = await this.Info.octokit.users.getAuthenticated();
-            this.Info.username = data.login;
-            if(!this.Info.username){
-                return vscode.window.showErrorMessage('Error setting Github, Kindly check you PAT');
-            }
-            console.log("Username is:", this.Info.username);
-            this.createRepo();
-        } catch (error) {
-            console.log("Error setting username", error);
-            return vscode.window.showErrorMessage('Error setting Github, Kindly check you PAT');
-        }
+      this.Info.git = simpleGit({ baseDir: this.Info.workspacePath });
+      this.createRepo();
+    } catch (error) {
+      console.log("Error setting username", error);
+      return vscode.window.showErrorMessage(
+        "Error setting Github, Kindly check you PAT"
+      );
+    }
+  }
+
+  public async createRepo() {
+    if (!this.Info.octokit || !this.Info.username) {
+      return vscode.window.showErrorMessage(
+        "Error setting Github, Kindly check you PAT"
+      );
+    }
+    try {
+      await this.Info.octokit.repos.get({
+        owner: this.Info.username,
+        repo: "gitime",
+      });
+      console.log("Repository already exists");
+      this.localGit();
+    } catch (error) {
+      await this.Info.octokit.repos.createForAuthenticatedUser({
+        name: "gitime",
+        private: false,
+        description:
+          "Repository for tracking code activity via Gitime extension",
+      });
+      console.log("Created new repository: gitime");
+      this.localGit();
+    }
+  }
+
+  public async localGit() {
+    if (
+      !this.Info.git ||
+      !this.Info.token ||
+      !this.Info.username ||
+      !this.Info.workspacePath
+    ) {
+      return;
     }
 
-    public async createRepo(){
-        if (!this.Info.octokit || !this.Info.username){
-            return vscode.window.showErrorMessage('Error setting Github, Kindly check you PAT');
-        }
-        try {
-            await this.Info.octokit.repos.get({
-                owner: this.Info.username,
-                repo: 'gitime'
-            });
-            console.log('Repository already exists');
-        } catch (error) {
-            await this.Info.octokit.repos.createForAuthenticatedUser({
-                name: 'gitime',
-                private: false,
-                description: 'Repository for tracking code activity via Gitime extension'
-            });
-            console.log('Created new repository: gitime');
-        }
+    try {
+      console.log(`Initializing git in directory: ${this.Info.workspacePath}`);
+
+      await this.Info.git.init();
+      const remoteUrl = `https://${this.Info.token}@github.com/${this.Info.username}/gitime.git`;
+
+      try {
+        await this.Info.git.remote(["remove", "origin"]);
+      } catch {
+        // Ignore if remote doesn't exist
+      }
+
+      await this.Info.git.remote(["add", "origin", remoteUrl]);
+
+      // Log success for debugging
+      console.log(
+        `Git initialized and remote set up in: ${this.Info.workspacePath}`
+      );
+    } catch (error) {
+      console.log("Error setting up local git repository:", error);
+      throw new Error("Failed to setup local git repository");
     }
+  }
 }
 
-export function initializeGithubService(){
-    const githubService = new GithubService();
-    return githubService;
+export function initializeGithubService() {
+  const githubService = new GithubService();
+  return githubService;
 }
 
 export const githubService = initializeGithubService();
@@ -121,7 +177,7 @@ export const githubService = initializeGithubService();
 //     private async ensureRepositoryExists() {
 //         try {
 //             const { data: user } = await this.octokit.users.getAuthenticated();
-            
+
 //             try {
 //                 // Check if repo exists
 //                 await this.octokit.repos.get({
