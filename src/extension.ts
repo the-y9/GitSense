@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { pushSummary } from './utils/summaryGeneration';
 import { GithubService } from './utils/githubApi';
 import { initializeGithubService } from './utils/githubApi';
-// import { githubService } from './utils/githubApi';
 
 let githubService: GithubService;
 

@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { tracker } from "./activityTracker";
 import { GithubService } from "./githubApi";
 
+//! function to generate the summary
 export async function generateSummary() {
 
   const codeHistory = tracker.getFormattedSummary();
@@ -29,12 +30,20 @@ export async function generateSummary() {
     return;
   }
 }
+
+//! Pushing summary after specified interval
 export function pushSummary(githubService: GithubService) {
   setInterval(async () => {
+    if(!tracker.hasChanges){
+      console.log("No new changes to generate summary");
+      return;
+    }
     console.log("Running summary generation");
     const summary = await generateSummary();
-    if (summary) {
-      githubService.saveSummary(summary);
-    }
+    console.log("Summary generated is: ", summary);
+    // if (summary) {
+    //   await githubService.saveSummary(summary);
+    //   tracker.clearHistory();
+    // }
   }, 30000); // Run every 30 seconds
 }

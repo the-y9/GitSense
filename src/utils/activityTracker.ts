@@ -123,6 +123,7 @@ interface codeChange {
 export class ActivityTracker {
     private codeHistory: codeChange[] =[];
     private maxHistorySize: number = 100;
+    private hasNewChanges: boolean = false;
 
     constructor(){
         this.setupEventListeners();
@@ -132,7 +133,6 @@ export class ActivityTracker {
     private setupEventListeners(){
         vscode.workspace.onDidSaveTextDocument((e)=>{
             const editor = vscode.window.activeTextEditor;
-
             if(!editor){
                 return;
             }
@@ -142,6 +142,7 @@ export class ActivityTracker {
 
     //! this method tracks the change done by the user in their file and stores it in the codeHistory array
     private trackChange(editor: vscode.TextEditor){
+
         const text = editor.document.getText();
         const filepath = editor.document.fileName;
 
@@ -152,6 +153,7 @@ export class ActivityTracker {
         };
         
         this.codeHistory.push(change);
+        this.hasNewChanges = true;
         console.log("code history is", this.codeHistory);
 
         if(this.codeHistory.length > this.maxHistorySize){
@@ -181,6 +183,11 @@ export class ActivityTracker {
     //! this method clears the history of the codeHistory array
     public clearHistory(){
         this.codeHistory = [];
+        this.hasNewChanges = false;
+    }
+
+    public hasChanges(){
+        return this.hasNewChanges;
     }
 }
 

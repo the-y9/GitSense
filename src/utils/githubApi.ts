@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 const { Octokit } = require("@octokit/rest");
-import { SecretStorage } from "vscode";
 export class GithubService {
-  public Info: {
+
+  private Info: {
     token: string | undefined;
     username: string | undefined;
     octokit: any;
@@ -18,8 +18,9 @@ export class GithubService {
     };
   }
 
+  //! Getting token and storing key information of User
   public async getToken() {
-    console.log("context secret is:", this.context.secrets);
+
     let token = await this.context.secrets.get("githubPAT");
 
     if(!token){
@@ -58,30 +59,47 @@ export class GithubService {
     }
   }
 
+  //! Creating repository for summaries
   public async createRepo() {
+
     if (!this.Info.octokit || !this.Info.username) {
       return vscode.window.showErrorMessage(
         "Error setting Github, Kindly check you PAT"
       );
     }
+    let repoExists = false;
+
     try {
-      await this.Info.octokit.repos.get({
+
+      await this.Info.octokit.repos.get({  //! Checking if repo exists
         owner: this.Info.username,
         repo: "AutoGitime",
       });
+      repoExists = true;
       console.log("Repository already exists");
-      await this.initializeRepo();
     } catch (error) {
-      await this.Info.octokit.repos.createForAuthenticatedUser({
-        name: "AutoGitime",
-        private: false,
-        description:
-          "Repository for tracking code activity via Gitime extension",
-      });
-      console.log("Created new repository: AutoGitime");
-      this.initializeRepo();
+      console.log("Repo not exist | Error getting repository:", error);
+    }
+
+    if(repoExists){   //! If repo exist move to initializeRepo method else create a new repo
+      await this.initializeRepo();
+    }else{
+      try {
+        await this.Info.octokit.repos.createForAuthenticatedUser({
+          name: "AutoGitime",
+          private: false,
+          description:
+            "Repository for tracking code activity via Gitime extension",
+        });
+        console.log("Created new repository: AutoGitime");
+        this.initializeRepo();
+      } catch (error) {
+        console.log("Error creating repository:", error);
+      }
     }
   }
+
+  //! Initializing repository with Readme.md file
   public async initializeRepo() {
     if(!this.Info.octokit || !this.Info.username){
       return vscode.window.showErrorMessage("Error setting Github, Kindly check you PAT");
@@ -109,6 +127,7 @@ export class GithubService {
     }
   }
 
+  //! Method to save the summary in the repository
   public async saveSummary(summary: string) {
     if (!this.Info.octokit || !this.Info.username) {
       vscode.window.showErrorMessage("GitHub service not initialized");
@@ -118,12 +137,11 @@ export class GithubService {
       const date = new Date();
       const fileName = `summaries/${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}.md`;
       
-      // Try to get existing content
       let currentContent = '';
       let fileSha;
       
       try {
-        const response = await this.Info.octokit.repos.getContent({
+        const response = await this.Info.octokit.repos.getContent({ //! Try to get existing content
           owner: this.Info.username,
           repo: "AutoGitime",
           path: fileName
@@ -133,19 +151,19 @@ export class GithubService {
           currentContent = Buffer.from(response.data.content, 'base64').toString();
           fileSha = response.data.sha;
         }
+        console.log("Fethced existing content");
 
-        console.log("pushed");
       } catch {
-        // File doesn't exist yet, that's okay
+        console.log("File doesn't exist yet, that's okay");
       }
 
-      // Format new content
+      //! Format new content
       const timeString = date.toLocaleTimeString();
       const newContent = currentContent ? 
         `${currentContent}\n\n## ${timeString}\n${summary}` :
         `# Activity Summary for ${date.toLocaleDateString()}\n\n## ${timeString}\n${summary}`;
 
-      // Create or update file
+      //! Create or update file
       await this.Info.octokit.repos.createOrUpdateFileContents({
         owner: this.Info.username,
         repo: "AutoGitime",
