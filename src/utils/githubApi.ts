@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 const { Octokit } = require("@octokit/rest");
+import { SecretStorage } from "vscode";
 export class GithubService {
   public Info: {
     token: string | undefined;
@@ -18,8 +19,8 @@ export class GithubService {
   }
 
   public async getToken() {
-
-    let token = await this.context.secrets.get("githubToken");
+    console.log("context secret is:", this.context.secrets);
+    let token = await this.context.secrets.get("githubPAT");
 
     if(!token){
       token = await vscode.window.showInputBox({
@@ -30,7 +31,7 @@ export class GithubService {
         password: true,
       });
       if (!token) {
-        return vscode.window.showWarningMessage("PAR is required for autocommit");
+        return vscode.window.showWarningMessage("PAT is required for autocommit");
       }
       await this.context.secrets.store("githubPAT", token);
     }
@@ -132,6 +133,8 @@ export class GithubService {
           currentContent = Buffer.from(response.data.content, 'base64').toString();
           fileSha = response.data.sha;
         }
+
+        console.log("pushed");
       } catch {
         // File doesn't exist yet, that's okay
       }

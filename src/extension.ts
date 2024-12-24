@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { generateSummary } from './utils/summaryGeneration';
+import { pushSummary } from './utils/summaryGeneration';
 import { GithubService } from './utils/githubApi';
 import { initializeGithubService } from './utils/githubApi';
 // import { githubService } from './utils/githubApi';
@@ -12,18 +12,20 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	githubService = initializeGithubService(context);
     await githubService.getToken();
+
+	pushSummary(githubService);
 	
 
 	const disposable = vscode.commands.registerCommand('gitime.helloWorld', () => {
 		vscode.window.showInformationMessage('Hello World from Gitime!');
 	});
-	const newCommand = vscode.commands.registerCommand('gitime.summary', async() => {
-		const summary = await generateSummary();
-		vscode.window.showInformationMessage(summary || "No summary generated.");
-	});
+	// const newCommand = vscode.commands.registerCommand('gitime.summary', async() => {
+	// 	const summary = await generateSummary();
+	// 	vscode.window.showInformationMessage(summary || "No summary generated.");
+	// });
 
 	context.subscriptions.push(disposable);
-	context.subscriptions.push(newCommand);
+	// context.subscriptions.push(newCommand);
 }
 
 export function deactivate() {}

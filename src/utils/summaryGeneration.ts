@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { tracker } from "./activityTracker";
-import { initializeGithubService } from './githubApi';
+import { GithubService } from "./githubApi";
 
 export async function generateSummary() {
 
@@ -29,10 +29,12 @@ export async function generateSummary() {
     return;
   }
 }
-setInterval(async() => {
+export function pushSummary(githubService: GithubService) {
+  setInterval(async () => {
     console.log("Running summary generation");
     const summary = await generateSummary();
-    if(summary){
-        //TODO: Automate push logic
+    if (summary) {
+      githubService.saveSummary(summary);
     }
-}, 30000);
+  }, 30000); // Run every 30 seconds
+}
