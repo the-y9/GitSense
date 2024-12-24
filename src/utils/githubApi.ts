@@ -1,13 +1,11 @@
 import * as vscode from "vscode";
 const { Octokit } = require("@octokit/rest");
-import simpleGit, { SimpleGit } from "simple-git";
 export class GithubService {
   public Info: {
     token: string | undefined;
     username: string | undefined;
     octokit: any;
     git: any;
-    workspacePath: string | undefined | null;
   };
 
   constructor() {
@@ -16,17 +14,10 @@ export class GithubService {
       username: undefined,
       octokit: undefined,
       git: undefined,
-      workspacePath: undefined,
     };
   }
 
   public async getToken() {
-    const workspacePath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-    if (!workspacePath) {
-      vscode.window.showErrorMessage("No workspace folder found");
-      return false;
-    }
-    this.Info.workspacePath = workspacePath;
 
     const token = await vscode.window.showInputBox({
       prompt:
@@ -51,8 +42,6 @@ export class GithubService {
         );
       }
       console.log("Username is:", this.Info.username);
-
-      this.Info.git = simpleGit({ baseDir: this.Info.workspacePath });
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
@@ -71,10 +60,10 @@ export class GithubService {
     try {
       await this.Info.octokit.repos.get({
         owner: this.Info.username,
-        repo: "gitime",
+        repo: "AutoGitime",
       });
       console.log("Repository already exists");
-      this.localGit();
+      await this.initializeRepo();
     } catch (error) {
       await this.Info.octokit.repos.createForAuthenticatedUser({
         name: "gitime",
@@ -82,42 +71,85 @@ export class GithubService {
         description:
           "Repository for tracking code activity via Gitime extension",
       });
-      console.log("Created new repository: gitime");
-      this.localGit();
+      console.log("Created new repository: AutoGitime");
+      this.initializeRepo();
     }
   }
-
-  public async localGit() {
-    if (
-      !this.Info.git ||
-      !this.Info.token ||
-      !this.Info.username ||
-      !this.Info.workspacePath
-    ) {
-      return;
+  public async initializeRepo() {
+    if(!this.Info.octokit || !this.Info.username){
+      return vscode.window.showErrorMessage("Error setting Github, Kindly check you PAT");
     }
 
     try {
-      console.log(`Initializing git in directory: ${this.Info.workspacePath}`);
-
-      await this.Info.git.init();
-      const remoteUrl = `https://${this.Info.token}@github.com/${this.Info.username}/gitime.git`;
-
       try {
-        await this.Info.git.remote(["remove", "origin"]);
+        await this.Info.octokit.repos.getContent({
+          owner: this.Info.username!,
+          repo: "AutoGitime",
+          path: "README.md"
+        });
+      } catch (error) {
+        await this.Info.octokit.repos.createOrUpdateFileContents({
+          owner: this.Info.username!,
+          repo: "AutoGitime",
+          path: "README.md",
+          message: "Initialize gitime repository",
+          content: Buffer.from("# Gitime\nTracking my coding activity using VS Code extension").toString("base64")
+        });
+      }
+    } catch (error) {
+      console.error("Error initializing repository:", error);
+      vscode.window.showErrorMessage("Failed to initialize repository");
+    }
+  }
+
+  public async saveSummary(summary: string) {
+    if (!this.Info.octokit || !this.Info.username) {
+      vscode.window.showErrorMessage("GitHub service not initialized");
+      return;
+    }
+    try {
+      const date = new Date();
+      const fileName = `summaries/${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}.md`;
+      
+      // Try to get existing content
+      let currentContent = '';
+      let fileSha;
+      
+      try {
+        const response = await this.Info.octokit.repos.getContent({
+          owner: this.Info.username,
+          repo: "AutoGitime",
+          path: fileName
+        });
+        
+        if ('content' in response.data) {
+          currentContent = Buffer.from(response.data.content, 'base64').toString();
+          fileSha = response.data.sha;
+        }
       } catch {
-        // Ignore if remote doesn't exist
+        // File doesn't exist yet, that's okay
       }
 
-      await this.Info.git.remote(["add", "origin", remoteUrl]);
+      // Format new content
+      const timeString = date.toLocaleTimeString();
+      const newContent = currentContent ? 
+        `${currentContent}\n\n## ${timeString}\n${summary}` :
+        `# Activity Summary for ${date.toLocaleDateString()}\n\n## ${timeString}\n${summary}`;
 
-      // Log success for debugging
-      console.log(
-        `Git initialized and remote set up in: ${this.Info.workspacePath}`
-      );
+      // Create or update file
+      await this.Info.octokit.repos.createOrUpdateFileContents({
+        owner: this.Info.username,
+        repo: "AutoGitime",
+        path: fileName,
+        message: `Add activity summary for ${timeString}`,
+        content: Buffer.from(newContent).toString('base64'),
+        ...(fileSha ? { sha: fileSha } : {})
+      });
+
+      vscode.window.showInformationMessage('Successfully saved activity summary');
     } catch (error) {
-      console.log("Error setting up local git repository:", error);
-      throw new Error("Failed to setup local git repository");
+      console.error("Failed to save summary:", error);
+      vscode.window.showErrorMessage("Failed to save activity summary");
     }
   }
 }
@@ -128,6 +160,9 @@ export function initializeGithubService() {
 }
 
 export const githubService = initializeGithubService();
+
+
+
 // export class GitHubService {
 //     private octokit: Octokit;
 //     private readonly repoName = 'gitime';
@@ -231,7 +266,7 @@ export const githubService = initializeGithubService();
 //                 throw error;
 //             }
 //         } catch (error) {
-//             vscode.window.showErrorMessage(`Failed to commit summary: ${error.message}`);
+//             vscode.window.showErrorMessage(`Failed toGitime summary: ${error.message}`);
 //             throw error;
 //         }
 //     }
