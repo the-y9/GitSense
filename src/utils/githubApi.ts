@@ -66,7 +66,7 @@ export class GithubService {
       await this.initializeRepo();
     } catch (error) {
       await this.Info.octokit.repos.createForAuthenticatedUser({
-        name: "gitime",
+        name: "AutoGitime",
         private: false,
         description:
           "Repository for tracking code activity via Gitime extension",
