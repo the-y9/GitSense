@@ -8,7 +8,7 @@ export class GithubService {
     git: any;
   };
 
-  constructor() {
+  constructor(private context: vscode.ExtensionContext) {
     this.Info = {
       token: undefined,
       username: undefined,
@@ -19,15 +19,20 @@ export class GithubService {
 
   public async getToken() {
 
-    const token = await vscode.window.showInputBox({
-      prompt:
-        "Enter your github personal access token (PAT) with access to repo",
-      placeHolder: "ghp_xxx...",
-      ignoreFocusOut: true,
-      password: true,
-    });
-    if (!token) {
-      return vscode.window.showWarningMessage("PAR is required for autocommit");
+    let token = await this.context.secrets.get("githubToken");
+
+    if(!token){
+      token = await vscode.window.showInputBox({
+        prompt:
+          "Enter your github personal access token (PAT) with access to repo",
+        placeHolder: "ghp_xxx...",
+        ignoreFocusOut: true,
+        password: true,
+      });
+      if (!token) {
+        return vscode.window.showWarningMessage("PAR is required for autocommit");
+      }
+      await this.context.secrets.store("githubPAT", token);
     }
 
     this.Info.token = token;
@@ -45,8 +50,9 @@ export class GithubService {
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
+      await this.context.secrets.delete("githubPAT");
       return vscode.window.showErrorMessage(
-        "Error setting Github, Kindly check you PAT"
+        "Error setting Github, Kindly check your PAT"
       );
     }
   }
@@ -154,14 +160,12 @@ export class GithubService {
   }
 }
 
-export function initializeGithubService() {
-  const githubService = new GithubService();
+export function initializeGithubService(context: vscode.ExtensionContext) {
+  const githubService = new GithubService(context);
   return githubService;
 }
 
-export const githubService = initializeGithubService();
-
-
+// export const githubService = initializeGithubService();
 
 // export class GitHubService {
 //     private octokit: Octokit;
