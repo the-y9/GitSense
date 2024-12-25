@@ -20,7 +20,12 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Gitime is in action!');
 	});
 
+	const disposable2 = vscode.commands.registerCommand('gitime.updateToken', () => {
+		githubService.updateToken();
+	});
+
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable2);
 }
 
 export function deactivate() {}

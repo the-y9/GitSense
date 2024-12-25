@@ -30,6 +30,10 @@
       {
         "command": "gitime.startGitime",
         "title": "Start Gitime"
+      },
+      {
+        "command": "gitime.updateToken",
+        "title": "Update Token"
       }
     ]
   },

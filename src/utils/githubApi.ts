@@ -32,10 +32,54 @@ export class GithubService {
         password: true,
       });
       if (!token) {
-        return vscode.window.showWarningMessage("PAT is required for autocommit");
+        vscode.window.showWarningMessage("PAT is required for autocommit");
+        return this.updateToken();
       }
       await this.context.secrets.store("githubPAT", token);
     }
+
+    this.Info.token = token;
+    this.Info.octokit = new Octokit({ auth: token });
+
+    try {
+      const { data } = await this.Info.octokit.users.getAuthenticated();
+      this.Info.username = data.login;
+      if (!this.Info.username) {
+        vscode.window.showErrorMessage(
+          "Error setting Github, Kindly check you PAT and Enter again"
+        );
+        this.updateToken();
+      }
+      console.log("Username is:", this.Info.username);
+      this.createRepo();
+    } catch (error) {
+      console.log("Error setting username", error);
+      await this.context.secrets.delete("githubPAT");
+      return vscode.window.showErrorMessage(
+        "Error setting Github, Kindly check your PAT"
+      );
+    }
+  }
+
+  //! Method to update the token
+  public async updateToken(){
+    let token = await this.context.secrets.get("githubPAT");
+    console.log("token is:", token );
+    await this.context.secrets.delete("githubPAT");
+    token = await this.context.secrets.get("githubPAT");
+    console.log("Token after deletion is ", token );
+
+     token = await vscode.window.showInputBox({
+      prompt:
+        "Enter your github personal access token (PAT) with access to repo",
+      placeHolder: "ghp_xxx...",
+      ignoreFocusOut: true,
+      password: true,
+    });
+    if (!token) {
+      return vscode.window.showWarningMessage("PAT is required for autocommit");
+    }
+    await this.context.secrets.store("githubPAT", token);
 
     this.Info.token = token;
     this.Info.octokit = new Octokit({ auth: token });
