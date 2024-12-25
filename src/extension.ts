@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { pushSummary } from './utils/summaryGeneration';
 import { GithubService } from './utils/githubApi';
 import { initializeGithubService } from './utils/githubApi';
+import { getEnv } from './utils/summaryGeneration';
 
 let githubService: GithubService;
 
@@ -11,7 +12,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	githubService = initializeGithubService(context);
     await githubService.getToken();
-
+	getEnv(context);
 	pushSummary(githubService);
 	
 

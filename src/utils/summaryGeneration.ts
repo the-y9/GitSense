@@ -1,22 +1,31 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { tracker } from "./activityTracker";
 import { GithubService } from "./githubApi";
+import { loadConfig, Config } from "./loadenv";
+import * as vscode from "vscode";
+
+//! function to load the env file
+let config: Config;
+export function getEnv(context: vscode.ExtensionContext) {
+  config = loadConfig(context);
+  if (!config.aiKey || !config.prompt) {
+      throw new Error('API key not found in settings or .env file');
+  }
+  console.log("Config loaded: ", config);
+}
 
 //! function to generate the summary
 export async function generateSummary() {
   const codeHistory = tracker.getFormattedSummary();
 
   const genAI = new GoogleGenerativeAI(
-    "AIzaSyAG7Ba5QwzEMBW1r2emkwe2aW_yAwPVOts"
+    config.aiKey
   );
 
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-  const prompt =
-    "You are an assistant tasked with summarizing texts or code.The following is a detailed log of code changes, where each entry includes a file path, content, and timestamp. Summarize the key information from these changes, highlighting file-specific updates, timestamps of significant changes, and any patterns or recurring elements in the content and just start your response from explaining without prefix like here's the response or here's the summary like this. Here is the log:";
-
   try {
-    const result = await model.generateContent(`${prompt}\n${codeHistory}`);
+    const result = await model.generateContent(`${config.prompt}\n${codeHistory}`);
 
     if (!result.response.text()) {
       return "No summary generated from AI";

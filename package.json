@@ -12,6 +12,20 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "properties": {
+        "gitime.aiKey": {
+          "type": "string",
+          "default": "",
+          "description": "AI Key for Gemini AI"
+        },
+        "gitime.prompt": {
+          "type": "string",
+          "default": "",
+          "description": "Default prompt for summary generation"
+        }
+      }
+    },
     "commands": [
       {
         "command": "gitime.startGitime",
