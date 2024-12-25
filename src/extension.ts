@@ -15,16 +15,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	pushSummary(githubService);
 	
 
-	const disposable = vscode.commands.registerCommand('gitime.helloWorld', () => {
-		vscode.window.showInformationMessage('Hello World from Gitime!');
+	const disposable = vscode.commands.registerCommand('gitime.startGitime', () => {
+		vscode.window.showInformationMessage('Gitime is in action!');
 	});
-	// const newCommand = vscode.commands.registerCommand('gitime.summary', async() => {
-	// 	const summary = await generateSummary();
-	// 	vscode.window.showInformationMessage(summary || "No summary generated.");
-	// });
 
 	context.subscriptions.push(disposable);
-	// context.subscriptions.push(newCommand);
 }
 
 export function deactivate() {}

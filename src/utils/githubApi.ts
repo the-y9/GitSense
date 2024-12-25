@@ -154,7 +154,7 @@ export class GithubService {
         console.log("Fethced existing content");
 
       } catch {
-        console.log("File doesn't exist yet, that's okay");
+        console.log("File doesn't exist yet, creating it");
       }
 
       //! Format new content
@@ -173,6 +173,7 @@ export class GithubService {
         ...(fileSha ? { sha: fileSha } : {})
       });
 
+      console.log("Successfully saved summary");
       vscode.window.showInformationMessage('Successfully saved activity summary');
     } catch (error) {
       console.error("Failed to save summary:", error);

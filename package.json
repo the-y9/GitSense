@@ -14,12 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "gitime.helloWorld",
-        "title": "Hello World"
-      },
-      {
-        "command": "gitime.summary",
-        "title": "Generate Summary"
+        "command": "gitime.startGitime",
+        "title": "Start Gitime"
       }
     ]
   },
