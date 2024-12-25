@@ -34,16 +34,19 @@ export async function generateSummary() {
 //! Pushing summary after specified interval
 export function pushSummary(githubService: GithubService) {
   setInterval(async () => {
-    if(!tracker.hasChanges){
+    const changes = tracker.hasChanges();
+    console.log("has new changes: ",changes);
+    if(!changes){
       console.log("No new changes to generate summary");
       return;
     }
     console.log("Running summary generation");
+    // tracker.clearHistory();
     const summary = await generateSummary();
     console.log("Summary generated is: ", summary);
-    // if (summary) {
-    //   await githubService.saveSummary(summary);
-    //   tracker.clearHistory();
-    // }
+    if (summary) {
+      await githubService.saveSummary(summary);
+      tracker.clearHistory();
+    }
   }, 30000); // Run every 30 seconds
 }
