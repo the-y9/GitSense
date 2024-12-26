@@ -19,9 +19,11 @@ export class GithubService {
   }
 
   //! Getting token and storing key information of User
+  //! This getToken method will run only 1 time when the extension is activated and for updation we use updateToken method
   public async getToken() {
 
     let token = await this.context.secrets.get("githubPAT");
+    console.log("token is:", token );
 
     if(!token){
       token = await vscode.window.showInputBox({
@@ -32,8 +34,7 @@ export class GithubService {
         password: true,
       });
       if (!token) {
-        vscode.window.showWarningMessage("PAT is required for autocommit");
-        return this.updateToken();
+        return vscode.window.showWarningMessage("PAT is required, run `Start Gitime` again to enter PAT");
       }
       await this.context.secrets.store("githubPAT", token);
     }
@@ -45,10 +46,9 @@ export class GithubService {
       const { data } = await this.Info.octokit.users.getAuthenticated();
       this.Info.username = data.login;
       if (!this.Info.username) {
-        vscode.window.showErrorMessage(
-          "Error setting Github, Kindly check you PAT and Enter again"
+         return vscode.window.showErrorMessage(
+          "Error setting Github, Kindly check you PAT and run `Start Gitime` again to enter PAT"
         );
-        this.updateToken();
       }
       console.log("Username is:", this.Info.username);
       this.createRepo();
@@ -56,7 +56,7 @@ export class GithubService {
       console.log("Error setting username", error);
       await this.context.secrets.delete("githubPAT");
       return vscode.window.showErrorMessage(
-        "Error setting Github, Kindly check your PAT"
+        "Error setting Github, Kindly check you PAT and run `Start Gitime` again to enter PAT"
       );
     }
   }
@@ -77,7 +77,7 @@ export class GithubService {
       password: true,
     });
     if (!token) {
-      return vscode.window.showWarningMessage("PAT is required for autocommit");
+      return vscode.window.showWarningMessage("PAT is required, run `Update Token` again to enter PAT");
     }
     await this.context.secrets.store("githubPAT", token);
 
@@ -89,7 +89,7 @@ export class GithubService {
       this.Info.username = data.login;
       if (!this.Info.username) {
         return vscode.window.showErrorMessage(
-          "Error setting Github, Kindly check you PAT"
+          "Error setting Github, Kindly check you PAT and run `Update Token` again to enter PAT"
         );
       }
       console.log("Username is:", this.Info.username);
@@ -98,7 +98,7 @@ export class GithubService {
       console.log("Error setting username", error);
       await this.context.secrets.delete("githubPAT");
       return vscode.window.showErrorMessage(
-        "Error setting Github, Kindly check your PAT"
+        "Error setting Github, Kindly check you PAT and run `Update Token` again to enter PAT"
       );
     }
   }
