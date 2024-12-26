@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 const { Octokit } = require("@octokit/rest");
 export class GithubService {
 
-  private Info: {
+  public Info: {
     token: string | undefined;
     username: string | undefined;
     octokit: any;
@@ -34,7 +34,7 @@ export class GithubService {
         password: true,
       });
       if (!token) {
-        return vscode.window.showWarningMessage("PAT is required, run `Start Gitime` again to enter PAT");
+        return vscode.window.showWarningMessage("PAT is required, run `Update Token` to enter PAT");
       }
       await this.context.secrets.store("githubPAT", token);
     }
@@ -47,16 +47,17 @@ export class GithubService {
       this.Info.username = data.login;
       if (!this.Info.username) {
          return vscode.window.showErrorMessage(
-          "Error setting Github, Kindly check you PAT and run `Start Gitime` again to enter PAT"
+          "Error setting Github, Kindly check you PAT and run `Update Token` again to enter PAT"
         );
       }
       console.log("Username is:", this.Info.username);
+      vscode.window.showInformationMessage(`Successfully set Github account: ${this.Info.username}`);
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
       await this.context.secrets.delete("githubPAT");
       return vscode.window.showErrorMessage(
-        "Error setting Github, Kindly check you PAT and run `Start Gitime` again to enter PAT"
+        "Error setting Github, Kindly check you PAT and run `Update Token` again to enter PAT"
       );
     }
   }
@@ -68,6 +69,10 @@ export class GithubService {
     await this.context.secrets.delete("githubPAT");
     token = await this.context.secrets.get("githubPAT");
     console.log("Token after deletion is ", token );
+
+    this.Info.token = undefined;
+    this.Info.username = undefined;
+    this.Info.octokit = undefined;
 
      token = await vscode.window.showInputBox({
       prompt:
@@ -93,6 +98,7 @@ export class GithubService {
         );
       }
       console.log("Username is:", this.Info.username);
+      vscode.window.showInformationMessage(`Successfully set Github account: ${this.Info.username}`);
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
@@ -174,8 +180,8 @@ export class GithubService {
   //! Method to save the summary in the repository
   public async saveSummary(summary: string) {
     if (!this.Info.octokit || !this.Info.username) {
-      vscode.window.showErrorMessage("GitHub service not initialized");
-      return;
+      console.log("No octokit or username found");
+      return vscode.window.showErrorMessage("GitHub service not initialized, Kindly check PAT and run `Update Token` to enter PAT");
     }
     try {
       const date = new Date();
@@ -217,8 +223,8 @@ export class GithubService {
         ...(fileSha ? { sha: fileSha } : {})
       });
 
-      console.log("Successfully saved summary");
-      vscode.window.showInformationMessage('Successfully saved activity summary');
+      console.log("Successfully saved summary in account: ", this.Info.username);
+      vscode.window.showInformationMessage(`Successfully saved activity summary in ${this.Info.username}'s account`);
     } catch (error) {
       console.error("Failed to save summary:", error);
       vscode.window.showErrorMessage("Failed to save activity summary");
