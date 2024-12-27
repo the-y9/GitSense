@@ -3,6 +3,7 @@ import { pushSummary } from './utils/summaryGeneration';
 import { GithubService } from './utils/githubApi';
 import { initializeGithubService } from './utils/githubApi';
 import { getEnv } from './utils/summaryGeneration';
+import { tracker } from './utils/activityTracker';
 
 let githubService: GithubService;
 
@@ -28,4 +29,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable2);
 }
 
-export function deactivate() {}
+export function deactivate() {
+	tracker.dispose();
+}

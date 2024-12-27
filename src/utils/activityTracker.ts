@@ -124,22 +124,35 @@ export class ActivityTracker {
     private codeHistory: codeChange[] =[];
     private maxHistorySize: number = 100;
     private hasNewChanges: boolean = false;
+    private debounceTimeout : NodeJS.Timeout | null = null;
+    private readonly DEBOUNCE_DELAY = 5000;
 
     constructor(){
         this.setupEventListeners();
     }
 
-    //! this method sets up the event listeners that will track the changes
+    //! this method sets up the event listeners that will track the changes and runs after debounce delay
     private setupEventListeners(){
         vscode.workspace.onDidSaveTextDocument((e)=>{
             const editor = vscode.window.activeTextEditor;
             if(!editor){
                 return;
             }
-            this.trackChange(editor);
+            if(this.debounceTimeout){
+                clearTimeout(this.debounceTimeout);
+            }
+            this.debounceTimeout = setTimeout(()=>{
+                this.trackChange(editor);
+            }, this.DEBOUNCE_DELAY);
         });
     }
 
+    //! A dispose method to clear the debounce timeout
+    public dispose(){
+        if (this.debounceTimeout) {
+            clearTimeout(this.debounceTimeout);
+        }
+    }
     //! this method tracks the change done by the user in their file and stores it in the codeHistory array
     private trackChange(editor: vscode.TextEditor){
 
