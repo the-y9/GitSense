@@ -153,15 +153,18 @@ export class ActivityTracker {
             clearTimeout(this.debounceTimeout);
         }
     }
+
     //! this method tracks the change done by the user in their file and stores it in the codeHistory array
     private trackChange(editor: vscode.TextEditor){
 
         const text = editor.document.getText();
+        const words = text.split(/\s+/);
+        const limitedText = words.slice(0, 1000).join(" ");  //! Limiting words to increase efficiency
         const filepath = editor.document.fileName;
 
         const change: codeChange = {
             filepath,
-            content: text,
+            content: limitedText,
             timestamp: Date.now()
         };
         
