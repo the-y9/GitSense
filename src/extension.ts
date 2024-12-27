@@ -17,8 +17,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	pushSummary(githubService);
 	
 
-	const disposable = vscode.commands.registerCommand('gitime.startGitime', () => {
-		vscode.window.showInformationMessage('Gitime is in action!');
+	const disposable = vscode.commands.registerCommand('gitime.runGitime', () => {
+		vscode.window.showInformationMessage('Gitime is running!');
 	});
 
 	const disposable2 = vscode.commands.registerCommand('gitime.updateToken', () => {

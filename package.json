@@ -28,8 +28,8 @@
     },
     "commands": [
       {
-        "command": "gitime.startGitime",
-        "title": "Start Gitime"
+        "command": "gitime.runGitime",
+        "title": "Run Gitime"
       },
       {
         "command": "gitime.updateToken",

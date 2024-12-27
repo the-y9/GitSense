@@ -51,7 +51,7 @@ export class GithubService {
         );
       }
       console.log("Username is:", this.Info.username);
-      vscode.window.showInformationMessage(`Successfully set Github account: ${this.Info.username}`);
+      vscode.window.showInformationMessage(`Github account ${this.Info.username} set for Gitime Extension`);
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
@@ -98,7 +98,7 @@ export class GithubService {
         );
       }
       console.log("Username is:", this.Info.username);
-      vscode.window.showInformationMessage(`Successfully set Github account: ${this.Info.username}`);
+      vscode.window.showInformationMessage(`Github account ${this.Info.username} set for Gitime Extension`);
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
@@ -224,7 +224,7 @@ export class GithubService {
       });
 
       console.log("Successfully saved summary in account: ", this.Info.username);
-      vscode.window.showInformationMessage(`Successfully saved activity summary in ${this.Info.username}'s account`);
+      vscode.window.showInformationMessage(`Successfully commited and pushed activity summary in ${this.Info.username}'s account`);
     } catch (error) {
       console.error("Failed to save summary:", error);
       vscode.window.showErrorMessage("Failed to save activity summary");
