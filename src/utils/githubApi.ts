@@ -40,7 +40,7 @@ export class GithubService {
       console.log("Token inside credential is:", token);
       // await this.context.secrets.store("githubPAT", token);
       try {
-        await this.context.secrets.store("githubPAT", token); // Store token securely
+        await this.context.secrets.store("githubPAT", token); // Store token
         console.log("Token stored successfully.");
     } catch (error) {
         console.error("Error storing the token:", error);

@@ -13,20 +13,7 @@
   "main": "./dist/extension.js",
   "authentication": ["github"],
   "contributes": {
-    "configuration": {
-      "properties": {
-        "gitsense.aiKey": {
-          "type": "string",
-          "default": "",
-          "description": "AI Key for Gemini AI"
-        },
-        "gitsense.prompt": {
-          "type": "string",
-          "default": "",
-          "description": "Default prompt for summary generation"
-        }
-      }
-    },
+    
     "commands": [
       {
         "command": "gitsense.runGitSense",
