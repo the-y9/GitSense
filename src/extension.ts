@@ -12,7 +12,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "gitime" is now active!');
 
 	githubService = initializeGithubService(context);
-    await githubService.getToken();
+    // await githubService.getToken();
+    await githubService.checkSession();
 	getEnv(context);
 	pushSummary(githubService);
 	
