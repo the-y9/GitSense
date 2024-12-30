@@ -36,9 +36,20 @@ export class GithubService {
         );
         return;
       }
-      await this.context.secrets.store("githubPAT", credentials?.accessToken);
+      token = credentials?.accessToken;
+      console.log("Token inside credential is:", token);
+      // await this.context.secrets.store("githubPAT", token);
+      try {
+        await this.context.secrets.store("githubPAT", token); // Store token securely
+        console.log("Token stored successfully.");
+    } catch (error) {
+        console.error("Error storing the token:", error);
+        vscode.window.showErrorMessage(
+            "Failed to save GitHub token. Please try again."
+        );
     }
-
+    }
+    console.log("Token is:", token);
     this.Info.token = token;
     this.Info.octokit = new Octokit({ auth: token });
 
@@ -51,7 +62,7 @@ export class GithubService {
         );
       }
       console.log("Username is:", this.Info.username);
-      vscode.window.showInformationMessage(`Github account ${this.Info.username} set for Gitime Extension`);
+      vscode.window.showInformationMessage(`Github account ${this.Info.username} set for GitSense Extension`);
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
@@ -96,7 +107,7 @@ export class GithubService {
   //       );
   //     }
   //     console.log("Username is:", this.Info.username);
-  //     vscode.window.showInformationMessage(`Github account ${this.Info.username} set for Gitime Extension`);
+  //     vscode.window.showInformationMessage(`Github account ${this.Info.username} set for GitSense Extension`);
   //     this.createRepo();
   //   } catch (error) {
   //     console.log("Error setting username", error);
@@ -143,7 +154,7 @@ export class GithubService {
         );
       }
       console.log("Username is:", this.Info.username);
-      vscode.window.showInformationMessage(`Github account ${this.Info.username} set for Gitime Extension`);
+      vscode.window.showInformationMessage(`Github account ${this.Info.username} set for GitSense Extension`);
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
@@ -168,7 +179,7 @@ export class GithubService {
 
       await this.Info.octokit.repos.get({  //! Checking if repo exists
         owner: this.Info.username,
-        repo: "AutoGitime",
+        repo: "GitSense-Commits",
       });
       repoExists = true;
       console.log("Repository already exists");
@@ -181,12 +192,12 @@ export class GithubService {
     }else{
       try {
         await this.Info.octokit.repos.createForAuthenticatedUser({
-          name: "AutoGitime",
+          name: "GitSense-Commits",
           private: false,
           description:
-            "Repository for tracking code activity via Gitime extension",
+            "Repository for tracking code activity via GitSense extension",
         });
-        console.log("Created new repository: AutoGitime");
+        console.log("Created new repository: GitSense-Commits");
         this.initializeRepo();
       } catch (error) {
         console.log("Error creating repository:", error);
@@ -204,16 +215,16 @@ export class GithubService {
       try {
         await this.Info.octokit.repos.getContent({
           owner: this.Info.username!,
-          repo: "AutoGitime",
+          repo: "GitSense-Commits",
           path: "README.md"
         });
       } catch (error) {
         await this.Info.octokit.repos.createOrUpdateFileContents({
           owner: this.Info.username!,
-          repo: "AutoGitime",
+          repo: "GitSense-Commits",
           path: "README.md",
-          message: "Initialize gitime repository",
-          content: Buffer.from("# Gitime\nTracking my coding activity using VS Code extension").toString("base64")
+          message: "Initialize GitSense repository",
+          content: Buffer.from("# GitSense\nTracking my coding activity using VS Code extension").toString("base64")
         });
       }
     } catch (error) {
@@ -238,7 +249,7 @@ export class GithubService {
       try {
         const response = await this.Info.octokit.repos.getContent({ //! Try to get existing content
           owner: this.Info.username,
-          repo: "AutoGitime",
+          repo: "GitSense-Commits",
           path: fileName
         });
         
@@ -261,7 +272,7 @@ export class GithubService {
       //! Create or update file
       await this.Info.octokit.repos.createOrUpdateFileContents({
         owner: this.Info.username,
-        repo: "AutoGitime",
+        repo: "GitSense-Commits",
         path: fileName,
         message: `Add activity summary for ${timeString}`,
         content: Buffer.from(newContent).toString('base64'),

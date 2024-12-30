@@ -1,6 +1,6 @@
 {
-  "name": "gitime",
-  "displayName": "Gitime",
+  "name": "gitsense",
+  "displayName": "GitSense",
   "description": "Automate commits",
   "version": "0.0.1",
   "engines": {
@@ -15,12 +15,12 @@
   "contributes": {
     "configuration": {
       "properties": {
-        "gitime.aiKey": {
+        "gitsense.aiKey": {
           "type": "string",
           "default": "",
           "description": "AI Key for Gemini AI"
         },
-        "gitime.prompt": {
+        "gitsense.prompt": {
           "type": "string",
           "default": "",
           "description": "Default prompt for summary generation"
@@ -29,12 +29,12 @@
     },
     "commands": [
       {
-        "command": "gitime.runGitime",
-        "title": "Run Gitime"
+        "command": "gitsense.runGitSense",
+        "title": "Run GitSense"
       },
       {
-        "command": "gitime.updateToken",
-        "title": "Update Token"
+        "command": "gitsense.updateToken",
+        "title": "Update Token for GitSense"
       }
     ]
   },

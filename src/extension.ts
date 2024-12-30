@@ -9,7 +9,7 @@ let githubService: GithubService;
 
 export async function activate(context: vscode.ExtensionContext) {
 
-	console.log('Congratulations, your extension "gitime" is now active!');
+	console.log('Congratulations, your extension "GitSense" is now active!');
 
 	githubService = initializeGithubService(context);
     // await githubService.getToken();
@@ -18,11 +18,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	pushSummary(githubService);
 	
 
-	const disposable = vscode.commands.registerCommand('gitime.runGitime', () => {
-		vscode.window.showInformationMessage('Gitime is running!');
+	const disposable = vscode.commands.registerCommand('gitsense.runGitSense', () => {
+		vscode.window.showInformationMessage('GitSense is running!');
 	});
 
-	const disposable2 = vscode.commands.registerCommand('gitime.updateToken', () => {
+	const disposable2 = vscode.commands.registerCommand('gitsense.updateToken', () => {
 		githubService.updateToken();
 	});
 

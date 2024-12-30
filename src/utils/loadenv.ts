@@ -8,13 +8,13 @@ export interface Config {
 }
 
 export function loadConfig(context: vscode.ExtensionContext): Config {
-
-    const config = vscode.workspace.getConfiguration('gitime');
+    console.log("Inside loadenv");
+    const config = vscode.workspace.getConfiguration('gitsense');
     const settingsConfig = {
         aiKey: config.get<string>('aiKey') || '',
         prompt: config.get<string>('prompt') || ''
     };
-
+    console.log("Settings Config: ", settingsConfig);
     if (settingsConfig.aiKey && settingsConfig.prompt) {
         return settingsConfig;
     }
