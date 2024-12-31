@@ -25,6 +25,10 @@
       }
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KAMAL-02/Gitime.git"
+  },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "webpack",

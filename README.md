@@ -1,71 +1,108 @@
-# gitime README
+# GitSense - Automate Your GitHub Contributions
 
-This is the README for your extension "gitime". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+GitSense is a VS Code extension that automates the process of summarizing your coding activity and committing it to a GitHub repository. It monitors your coding activity in one-hour intervals, generates a summary of your changes, and commits and pushes these summaries to your GitHub repository named `GitSense-commits`. This tool streamlines tracking your progress and maintaining a detailed log of your work.
 
 ---
 
-## Following extension guidelines
+## Why GitSense?
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+In many professional workflows, developers often work on feature branches and make commits. However, when these branches are merged, the commit history becomes condensed, and the individual contributions are not reflected. Additionally, many developers use separate email accounts for professional work, leaving little time to enhance their personal GitHub profiles.
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+GitSense addresses this gap by ensuring your personal GitHub profile stays active and well-maintained. It automatically updates your GitHub commit chart with regular commits, helping you showcase consistent activity and growth as a developer.
 
-## Working with Markdown
+---
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+## Features
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+1. **Automated Monitoring**: GitSense monitors the codes you save and generates summaries of your code every hour.
+2. **Hourly Commits**: After an hour of work, GitSense commits and pushes a summary of your changes to the `GitSense-commits` repository.
+   - For example, if you work for 2 hours, there will be 2 commits and pushes.
+3. **GitHub Integration**:
+   - Login via VS Code to authenticate with your GitHub account.
+   - Alternatively, you can manually enter your GitHub Personal Access Token (PAT) for authentication.
+4. **Enhance Your GitHub Profile**: Maintain a consistent and active commit chart on your personal GitHub profile, even when working on professional projects.
+5. **Flexible Commands**:
+   - Activate GitSense with the `Run GitSense` command.
+   - Update your PAT manually with the `Update Token` command.
 
-## For more information
+---
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+## Installation
 
-**Enjoy!**
+1. Install GitSense from the VS Code marketplace. [Link to the extension]( " ").
+2. Open VS Code and run `Run GitSense` using the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P` on macOS) to run the extension.
+
+---
+
+## Getting Started
+
+### Step 1: Authenticate with GitHub
+GitSense requires access to your GitHub account to push commits. You can authenticate in one of the following ways:
+
+#### **Option 1: Login via VS Code**
+1. Open the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P`).
+2. Select the `Run GitSense` command.
+3. If you are already logged into GitHub through VS Code, GitSense will start working immediately.
+4. If not, you will be prompted to login via GitHub. (See [image](images/runGitsense))
+
+#### **Option 2: Use a Personal Access Token (PAT)**
+1. Generate a Personal Access Token by following [this guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+   - Ensure the token has `repo` access.
+   - Example setup: [image](images/setPAT4).
+2. Open the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P`).
+3. Run `Update Token for GitSense` and enter your PAT in the input box. (See [image](images/updateToken))
+
+---
+
+## How It Works
+1. GitSense monitors your saved changes every hour.
+2. At the end of each hour, it generates a summary of your work.
+3. The summary is committed and pushed to your `GitSense-commits` repository.
+   - If you work for 2 hours, GitSense will create 2 commits and pushes.
+4. By ensuring regular commits, GitSense helps you maintain an active GitHub profile, even when your professional projects involve complex workflows with merged commits or separate email accounts.
+
+---
+
+## Commands
+
+### 1. **Run GitSense**
+- Activate GitSense to start monitoring your code.
+- Command: `Run GitSense`
+- Shortcut: `Ctrl + Shift + P` or `Cmd + Shift + P`, then type `Run GitSense`.
+
+### 2. **Update Token for GitSense**
+- Update your Personal Access Token (PAT) for GitHub authentication.
+- Command: `Update Token`
+- Shortcut: `Ctrl + Shift + P` or `Cmd + Shift + P`, then type `Update Token`.
+
+---
+
+## Requirements
+- **VS Code**: Make sure you have VS Code installed.
+- **GitHub Account**: Required for authentication.
+- **Personal Access Token (Optional)**: If not using the login feature.
+- **Repository Name**: The extension automatically creates and commits to a repository named `GitSense-commits`.
+
+---
+
+## Screenshots
+
+### Login Prompt:
+![Run GitSense](images/sunGitsense)
+
+### Update Personal Access Token:
+![Update Token](images/updateToken)
+
+### Example PAT Setup:
+![Set PAT](images/setPAT4)
+
+---
+
+## About the Creator
+GitSense is created and maintained by **KAMAL-02**. Feel free to reach out.
+
+---
+
+## License
+GitSense is licensed under the MIT License. See the `LICENSE` file for details.
+
