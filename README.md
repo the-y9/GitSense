@@ -43,14 +43,14 @@ GitSense requires access to your GitHub account to push commits. You can authent
 1. Open the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P`).
 2. Select the `Run GitSense` command.
 3. If you are already logged into GitHub through VS Code, GitSense will start working immediately.
-4. If not, you will be prompted to login via GitHub. (See [image](images/runGitsense))
+4. If not, you will be prompted to login via GitHub. ([image](images\runGitsense.png))
 
 #### **Option 2: Use a Personal Access Token (PAT)**
 1. Generate a Personal Access Token by following [this guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
    - Ensure the token has `repo` access.
-   - Example setup: [image](images/setPAT4).
+   - Example setup: [image](images/setPAT4.png).
 2. Open the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P`).
-3. Run `Update Token for GitSense` and enter your PAT in the input box. (See [image](images/updateToken))
+3. Run `Update Token for GitSense` and enter your PAT in the input box. (See [image](images/updateToken.png))
 
 ---
 
@@ -69,11 +69,13 @@ GitSense requires access to your GitHub account to push commits. You can authent
 - Activate GitSense to start monitoring your code.
 - Command: `Run GitSense`
 - Shortcut: `Ctrl + Shift + P` or `Cmd + Shift + P`, then type `Run GitSense`.
+([image](images\runGitsense.png))
 
 ### 2. **Update Token for GitSense**
 - Update your Personal Access Token (PAT) for GitHub authentication.
-- Command: `Update Token`
+- Command: `Update Token for GitSense`
 - Shortcut: `Ctrl + Shift + P` or `Cmd + Shift + P`, then type `Update Token`.
+([image](images\updateToken.png))
 
 ---
 
@@ -88,13 +90,10 @@ GitSense requires access to your GitHub account to push commits. You can authent
 ## Screenshots
 
 ### Login Prompt:
-![Run GitSense](images/sunGitsense)
+![Run GitSense](images/runGitsense.png)
 
 ### Update Personal Access Token:
-![Update Token](images/updateToken)
-
-### Example PAT Setup:
-![Set PAT](images/setPAT4)
+![Update Token for GitSense](images/updateToken.png)
 
 ---
 
