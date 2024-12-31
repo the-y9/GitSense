@@ -89,7 +89,7 @@ GitSense requires access to your GitHub account to push commits. You can authent
 
 ## Screenshots
 
-### Login Prompt:
+### Run Extension:
 ![Run GitSense](images/runGitsense.png)
 
 ### Update Personal Access Token:
