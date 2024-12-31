@@ -29,7 +29,7 @@ GitSense addresses this gap by ensuring your personal GitHub profile stays activ
 
 ## Installation
 
-1. Install GitSense from the VS Code marketplace. [Link to the extension]("https://marketplace.visualstudio.com/items?itemName=KAMAL-02.gitsense").
+1. Install GitSense from the VS Code marketplace. [Link to the extension](https://marketplace.visualstudio.com/items?itemName=KAMAL-02.gitsense).
 2. Open VS Code and run `Run GitSense` using the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P` on macOS) to run the extension.
 
 ---
