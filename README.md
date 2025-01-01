@@ -43,14 +43,16 @@ GitSense requires access to your GitHub account to push commits. You can authent
 1. Open the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P`).
 2. Select the `Run GitSense` command.
 3. If you are already logged in VS Code through Github, GitSense will start working immediately.
-4. If not, you will be prompted to login via GitHub. ![image](images/runGitsense.png)
+4. If not, you will be prompted to login via GitHub.
+<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/runGitsense.png?token=GHSAT0AAAAAACZN7OB4UNDTCUIKUDK6C272Z3U54EA" alt="Run GitSense" width="500" />
 
 #### **Option 2: Use a Personal Access Token (PAT)**
 1. Generate a Personal Access Token by following [this guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
    - Ensure the token has `repo` access.
-    ![image](images/setPAT4.png).
+<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/setPAT4.png?token=GHSAT0AAAAAACZN7OB4MJKOQ5ZNNNLUQHMSZ3U6ACA" alt="Set PAT Example" width="500" />
 2. Open the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P`).
-3. Run `Update Token for GitSense` and enter your PAT in the input box. ![image](images/updateToken.png)
+3. Run `Update Token for GitSense` and enter your PAT in the input box.
+<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/updateToken.png?token=GHSAT0AAAAAACZN7OB4CHGZWJV3QQ5QSJL6Z3U57DQ" alt="Update Token" width="500" />
 
 ---
 
@@ -69,13 +71,13 @@ GitSense requires access to your GitHub account to push commits. You can authent
 - Activate GitSense to start monitoring your code.
 - Command: `Run GitSense`
 - Shortcut: `Ctrl + Shift + P` or `Cmd + Shift + P`, then type `Run GitSense`.
-![image](images/runGitsense.png)
+<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/runGitsense.png?token=GHSAT0AAAAAACZN7OB4UNDTCUIKUDK6C272Z3U54EA" alt="Run GitSense" width="500" />
 
 ### 2. **Update Token for GitSense**
 - Update your Personal Access Token (PAT) for GitHub authentication.
 - Command: `Update Token for GitSense`
 - Shortcut: `Ctrl + Shift + P` or `Cmd + Shift + P`, then type `Update Token`.
-![image](images/updateToken.png)
+<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/updateToken.png?token=GHSAT0AAAAAACZN7OB4CHGZWJV3QQ5QSJL6Z3U57DQ" alt="Update Token" width="500" />
 
 ---
 
@@ -90,10 +92,10 @@ GitSense requires access to your GitHub account to push commits. You can authent
 ## Screenshots
 
 ### Run Extension:
-![Run GitSense](images/runGitsense.png)
+<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/runGitsense.png?token=GHSAT0AAAAAACZN7OB4UNDTCUIKUDK6C272Z3U54EA" alt="Run GitSense" width="500" />
 
 ### Update Personal Access Token:
-![Update Token for GitSense](images/updateToken.png)
+<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/updateToken.png?token=GHSAT0AAAAAACZN7OB4CHGZWJV3QQ5QSJL6Z3U57DQ" alt="Update Token" width="500" />
 
 ---
 
