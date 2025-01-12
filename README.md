@@ -15,22 +15,20 @@ GitSense addresses this gap by ensuring your personal GitHub profile stays activ
 ## Features
 
 1. **Automated Monitoring**: GitSense monitors the codes you save and generates summaries of your code every hour.
-2. **Hourly Commits**: After an hour of work, GitSense commits and pushes a summary of your changes to the `GitSense-commits` repository.
-   - For example, if you work for 2 hours, there will be 2 commits and pushes.
+2. **Hourly Commits**: After continous hour of work, GitSense commits and pushes a summary of your changes to the `GitSense-commits` repository.
+   - For example, if you work for 2 hours continously, there will be 2 commits and pushes.
 3. **GitHub Integration**:
    - Login via VS Code to authenticate with your GitHub account.
    - Alternatively, you can manually enter your GitHub Personal Access Token (PAT) for authentication.
 4. **Enhance Your GitHub Profile**: Maintain a consistent and active commit chart on your personal GitHub profile, even when working on professional projects.
-5. **Flexible Commands**:
-   - Activate GitSense with the `Run GitSense` command.
+5. **Commands**:
    - Update your PAT manually with the `Update Token` command.
 
 ---
 
 ## Installation
 
-1. Install GitSense from the VS Code marketplace. [Link to the extension](https://marketplace.visualstudio.com/items?itemName=KAMAL-02.gitsense).
-2. Open VS Code and run `Run GitSense` using the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P` on macOS) to run the extension.
+Install GitSense from the VS Code marketplace. [Link to the extension](https://marketplace.visualstudio.com/items?itemName=KAMAL-02.gitsense).
 
 ---
 
@@ -40,11 +38,8 @@ GitSense addresses this gap by ensuring your personal GitHub profile stays activ
 GitSense requires access to your GitHub account to push commits. You can authenticate in one of the following ways:
 
 #### **Option 1: Login via VS Code**
-1. Open the command palette (`Ctrl + Shift + P` or `Cmd + Shift + P`).
-2. Select the `Run GitSense` command.
-3. If you are already logged in VS Code through Github, GitSense will start working immediately.
-4. If not, you will be prompted to login via GitHub.
-<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/runGitsense.png" alt="Run GitSense" width="500" />
+1. If you are already logged in VS Code through Github, GitSense will start working immediately.
+2. If not, you will be prompted to login via GitHub.
 
 #### **Option 2: Use a Personal Access Token (PAT)**
 1. Generate a Personal Access Token by following [this guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
@@ -56,24 +51,9 @@ GitSense requires access to your GitHub account to push commits. You can authent
 
 ---
 
-## How It Works
-1. GitSense monitors your saved changes every hour.
-2. At the end of each hour, it generates a summary of your work.
-3. The summary is committed and pushed to your `GitSense-commits` repository.
-   - If you work for 2 hours, GitSense will create 2 commits and pushes.
-4. By ensuring regular commits, GitSense helps you maintain an active GitHub profile, even when your professional projects involve complex workflows with merged commits or separate email accounts.
+## Command
 
----
-
-## Commands
-
-### 1. **Run GitSense**
-- Activate GitSense to start monitoring your code.
-- Command: `Run GitSense`
-- Shortcut: `Ctrl + Shift + P` or `Cmd + Shift + P`, then type `Run GitSense`.
-<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/runGitsense.png" alt="Run GitSense" width="500" />
-
-### 2. **Update Token for GitSense**
+### 1. **Update Token for GitSense**
 - Update your Personal Access Token (PAT) for GitHub authentication.
 - Command: `Update Token for GitSense`
 - Shortcut: `Ctrl + Shift + P` or `Cmd + Shift + P`, then type `Update Token`.
@@ -85,17 +65,6 @@ GitSense requires access to your GitHub account to push commits. You can authent
 - **VS Code**: Make sure you have VS Code installed.
 - **GitHub Account**: Required for authentication.
 - **Personal Access Token (Optional)**: If not using the login feature.
-- **Repository Name**: The extension automatically creates and commits to a repository named `GitSense-commits`.
-
----
-
-## Screenshots
-
-### Run Extension:
-<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/runGitsense.png" alt="Run GitSense" width="500" />
-
-### Update Personal Access Token:
-<img src="https://raw.githubusercontent.com/KAMAL-02/GitSense/refs/heads/main/images/updateToken.png" alt="Update Token" width="500" />
 
 ---
 

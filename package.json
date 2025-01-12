@@ -3,8 +3,8 @@
   "displayName": "GitSense",
   "publisher": "KAMAL-02",
   "icon": "images/icon.png",
-  "description": "automates the process of summarizing your coding activity and committing it to a GitHub repository",
-  "version": "0.0.4",
+  "description": "Automates the process of summarizing your coding activity and committing it to a GitHub repository",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -12,19 +12,12 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.runGitSense",
-    "onCommand:extension.updateToken",
     "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "authentication": ["github"],
   "contributes": {
-    
     "commands": [
-      {
-        "command": "gitsense.runGitSense",
-        "title": "Run GitSense"
-      },
       {
         "command": "gitsense.updateToken",
         "title": "Update Token for GitSense"

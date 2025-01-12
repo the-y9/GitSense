@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { tracker } from "./activityTracker";
 import { GithubService } from "./githubApi";
 import { loadConfig, Config } from "./loadenv";
+import { ActivityTracker } from "./activityTracker";
 import * as vscode from "vscode";
 
 //! function to load the env file
@@ -15,7 +16,7 @@ export function getEnv(context: vscode.ExtensionContext) {
 }
 
 //! function to generate the summary
-export async function generateSummary() {
+export async function generateSummary(tracker: ActivityTracker) {
   const codeHistory = tracker.getFormattedSummary();
 
   const genAI = new GoogleGenerativeAI(config.aiKey);
@@ -38,15 +39,17 @@ export async function generateSummary() {
   }
 }
 
-//! Pushing summary after specified interval
+// //! Pushing summary after specified interval
 let summaryInterval: NodeJS.Timeout | null = null;
 
 export function pushSummary(githubService: GithubService) {
+
   const username = githubService.Info.username;
   if (!username) {
     console.log("Username not found, cant generate summary");
     return;
   }
+
   if (summaryInterval) {
     clearInterval(summaryInterval);
   }
@@ -62,7 +65,7 @@ export function pushSummary(githubService: GithubService) {
     try {
       console.log("Running summary generation");
       isProcessing = true;
-      const summary = await generateSummary();
+      const summary = await generateSummary(tracker);
 
       console.log("Summary generated is: ", summary);
       if (summary) {
@@ -74,7 +77,7 @@ export function pushSummary(githubService: GithubService) {
     } finally {
       isProcessing = false;
     }
-  }, 3600000); // Run every 30 seconds
+  }, 3600000); // Run every 1hr
 
   return () => {
     if (summaryInterval) {
@@ -82,4 +85,53 @@ export function pushSummary(githubService: GithubService) {
       summaryInterval = null;
     }
   };
+
+//   let pushTimer = setTimeout(async () => {
+//     if (tracker.hasChanges()) {
+//         try {
+//             console.log("Generating and pushing summary...");
+//             const summary = await generateSummary(tracker);
+
+//             if (summary) {
+//                 await githubService.saveSummary(summary);
+//                 tracker.clearHistory();
+//                 tracker.updateLastPushTime(Date.now());
+
+//                 pushTimer = setTimeout(pushLoop, HOUR); // Reset timer for next hour
+//             }
+//         } catch (error) {
+//             console.error("Error pushing summary:", error);
+//         }
+//     } else {
+//         console.log("No changes to push, waiting for next interval");
+//         pushTimer = setTimeout(pushLoop, HOUR);
+//     }
+// }, remainingTime);
+
+//     // Function to handle the continuous push loop
+//     function pushLoop() {
+//       if (tracker.hasChanges()) {
+//           generateSummary(tracker).then(async (summary) => {
+//               if (summary) {
+//                   await githubService.saveSummary(summary);
+//                   tracker.clearHistory();
+//                   tracker.updateLastPushTime(Date.now());
+//               }
+//               pushTimer = setTimeout(pushLoop, HOUR);
+//           }).catch(error => {
+//               console.error("Error in push loop:", error);
+//               pushTimer = setTimeout(pushLoop, HOUR);
+//           });
+//       } else {
+//           // No changes, check again in an hour
+//           pushTimer = setTimeout(pushLoop, HOUR);
+//       }
+//   }
+
+//   // Return cleanup function
+//   return () => {
+//       if (pushTimer) {
+//           clearTimeout(pushTimer);
+//       }
+//   };
 }

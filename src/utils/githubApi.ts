@@ -28,8 +28,7 @@ export class GithubService {
         ["repo"],
         { createIfNone: true }
       );
-      console.log("Credentials are:", credentials?.accessToken);
-  
+      // console.log("Credentials are:", credentials?.accessToken);
       if (!credentials) {
         vscode.window.showErrorMessage(
           "GitHub credentials not found. Please log in to VS Code using your GitHub credentials or run the 'Update Token' command to enter a Personal Access Token (PAT)."
@@ -37,7 +36,6 @@ export class GithubService {
         return;
       }
       token = credentials?.accessToken;
-      console.log("Token inside credential is:", token);
       // await this.context.secrets.store("githubPAT", token);
       try {
         await this.context.secrets.store("githubPAT", token); // Store token
@@ -45,11 +43,10 @@ export class GithubService {
     } catch (error) {
         console.error("Error storing the token:", error);
         vscode.window.showErrorMessage(
-            "Failed to save GitHub token. Please try again."
+            "Failed to save GitHub token. Please try again later."
         );
     }
     }
-    console.log("Token is:", token);
     this.Info.token = token;
     this.Info.octokit = new Octokit({ auth: token });
 
@@ -62,7 +59,7 @@ export class GithubService {
         );
       }
       console.log("Username is:", this.Info.username);
-      vscode.window.showInformationMessage(`Github account ${this.Info.username} set for GitSense Extension`);
+      vscode.window.showInformationMessage(`Github account ${this.Info.username} is set for GitSense Extension`);
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
@@ -154,7 +151,7 @@ export class GithubService {
         );
       }
       console.log("Username is:", this.Info.username);
-      vscode.window.showInformationMessage(`Github account ${this.Info.username} set for GitSense Extension`);
+      vscode.window.showInformationMessage(`Github account ${this.Info.username} is set for GitSense Extension`);
       this.createRepo();
     } catch (error) {
       console.log("Error setting username", error);
