@@ -77,7 +77,7 @@ export function pushSummary(githubService: GithubService) {
     } finally {
       isProcessing = false;
     }
-  }, 3600000); // Run every 1hr
+  }, 30*60/1000); // Run every 30min
 
   return () => {
     if (summaryInterval) {
@@ -85,53 +85,3 @@ export function pushSummary(githubService: GithubService) {
       summaryInterval = null;
     }
   };
-
-//   let pushTimer = setTimeout(async () => {
-//     if (tracker.hasChanges()) {
-//         try {
-//             console.log("Generating and pushing summary...");
-//             const summary = await generateSummary(tracker);
-
-//             if (summary) {
-//                 await githubService.saveSummary(summary);
-//                 tracker.clearHistory();
-//                 tracker.updateLastPushTime(Date.now());
-
-//                 pushTimer = setTimeout(pushLoop, HOUR); // Reset timer for next hour
-//             }
-//         } catch (error) {
-//             console.error("Error pushing summary:", error);
-//         }
-//     } else {
-//         console.log("No changes to push, waiting for next interval");
-//         pushTimer = setTimeout(pushLoop, HOUR);
-//     }
-// }, remainingTime);
-
-//     // Function to handle the continuous push loop
-//     function pushLoop() {
-//       if (tracker.hasChanges()) {
-//           generateSummary(tracker).then(async (summary) => {
-//               if (summary) {
-//                   await githubService.saveSummary(summary);
-//                   tracker.clearHistory();
-//                   tracker.updateLastPushTime(Date.now());
-//               }
-//               pushTimer = setTimeout(pushLoop, HOUR);
-//           }).catch(error => {
-//               console.error("Error in push loop:", error);
-//               pushTimer = setTimeout(pushLoop, HOUR);
-//           });
-//       } else {
-//           // No changes, check again in an hour
-//           pushTimer = setTimeout(pushLoop, HOUR);
-//       }
-//   }
-
-//   // Return cleanup function
-//   return () => {
-//       if (pushTimer) {
-//           clearTimeout(pushTimer);
-//       }
-//   };
-}
